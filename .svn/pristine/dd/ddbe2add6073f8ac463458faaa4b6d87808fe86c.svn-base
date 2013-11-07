@@ -1,0 +1,497 @@
+package com.mss.axa.photo.util;
+
+import java.io.File;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.mss.axa.photo.app.CameraPreview;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
+import android.view.View;
+
+@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
+public class Util {
+
+	private static File mPathDir;
+	private static int[] toInt = new int[128];
+	private static boolean mExternalStorageAvailable = false;
+	private static boolean mExternalStorageWriteable = false;
+	private static final Logger logger = Logger.getLogger(Util.class.getName());
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
+	private static final SimpleDateFormat sdfHour = new SimpleDateFormat("HH:mm:ss");
+	private static final DecimalFormat decimalCurrencyFormat = new DecimalFormat("###,###,###.00");
+	private static final DecimalFormat currencyFormat = new DecimalFormat("###,###,###.##");
+	private final static char[] ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+	public static final Date MIN_DATE;
+	static String n;
+	static Uri myPicture = null;
+
+	static {
+		Calendar c = Calendar.getInstance();
+		c.set(1970, 1, 1);
+		MIN_DATE = c.getTime();
+
+		for (int i = 0; i < ALPHABET.length; i++) {
+			toInt[ALPHABET[i]] = i;
+		}
+	}
+
+	private Util() {
+
+	}
+
+	@SuppressLint("DefaultLocale")
+	public static boolean stringToBoolean(String v) {
+		boolean vl = false;
+		try {
+			if (v != null && v.equals("") == false) {
+				if (v.equals("1") || v.toUpperCase().equals("ON")) {
+					vl = true;
+				} else {
+					vl = Boolean.parseBoolean(v);
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		return vl;
+	}
+
+	public static Long dateToLong(Date date) {
+		long v = 0;
+		try {
+			if (date != null) {
+				v = date.getTime();
+			}
+		} catch (Exception e) {
+			logger.log(Level.INFO, "ERROR Util - dateToLong: \n" + e);
+		}
+		return v;
+	}
+
+	public static String dateToString(Date date) {
+		String v = "";
+		try {
+			v = sdf.format(date);
+		} catch (Exception e) {
+			logger.log(Level.INFO, "ERROR Util - dateToString: \n" + e);
+		}
+		return v;
+	}
+
+	public static String dateOnlyToString(Date date) {
+		String v = "";
+		try {
+			v = sdfDate.format(date);
+		} catch (Exception e) {
+			logger.log(Level.INFO, "ERROR Util - dateToString: \n" + e);
+		}
+		return v;
+	}
+
+	public static String hourOnlyToString(Date date) {
+		String v = "";
+		try {
+			v = sdfHour.format(date);
+		} catch (Exception e) {
+			logger.log(Level.INFO, "ERROR Util - dateToString: \n" + e);
+		}
+		return v;
+	}
+
+	public static Date stringToDate(String date) {
+		Date d = null;
+		try {
+			if (date != null) {
+				d = sdf.parse(date);
+			}
+		} catch (ParseException e) {
+			logger.log(Level.INFO, "ERROR Util - stringToDate: \n" + e);
+		}
+		return d;
+
+	}
+
+	public static String getResourceString(int stringId, Context cc) {
+		String s = null;
+		if (cc != null) {
+			s = cc.getString(stringId);
+		}
+		return s;
+	}
+
+	public static String longToString(long value) {
+		String v = "";
+		try {
+			v = String.valueOf(value);
+		} catch (Exception e) {
+		}
+		return v;
+	}
+
+	public static String booleanToString(boolean value) {
+		String v = "";
+		try {
+			v = String.valueOf(value);
+		} catch (Exception e) {
+		}
+		return v;
+	}
+
+	public static String integerToString(int value) {
+		String v = "0";
+		try {
+			v = String.valueOf(value);
+		} catch (Exception e) {
+		}
+		return v;
+	}
+
+	public static double stringToDouble(String value) {
+		double v = 0;
+		try {
+			v = Double.valueOf(value);
+		} catch (Exception e) {
+		}
+
+		return v;
+	}
+
+	public static long stringToLong(String value) {
+		long v = 0;
+		try {
+			v = Long.valueOf(value);
+		} catch (Exception e) {
+		}
+
+		return v;
+	}
+
+	public static boolean isNullOrEmptyTrim(String value) {
+		boolean v = true;
+		if (value != null && value.trim().equals("") == false) {
+			v = false;
+		}
+		return v;
+	}
+
+	public static boolean isNullOrEmpty(String value) {
+		boolean v = true;
+		if (value != null && value.equals("") == false) {
+			v = false;
+		}
+		return v;
+	}
+
+	public static void replaceAll(StringBuilder value, String oValue, Object nValue) {
+		if (nValue != null) {
+			replaceAll(value, oValue, nValue.toString());
+		}
+	}
+
+	public static void replaceAll(StringBuilder value, String oValue, String nValue) {
+		replace(value, oValue, nValue, true);
+	}
+
+	/**
+	 * Replaces only the first match
+	 * 
+	 * @param value
+	 * @param oValue
+	 * @param nValue
+	 */
+	public static void replaceOne(StringBuilder value, String oValue, Object nValue) {
+		if (nValue != null) {
+			replace(value, oValue, nValue.toString(), false);
+		}
+	}
+
+	/**
+	 * Replaces only the first match
+	 * 
+	 * @param value
+	 * @param oValue
+	 * @param nValue
+	 */
+	public static void replaceOne(StringBuilder value, String oValue, String nValue) {
+		replace(value, oValue, nValue, false);
+	}
+
+	private static void replace(StringBuilder value, String oValue, String nValue, boolean all) {
+		if (value != null && oValue != null && nValue != null) {
+			int l = oValue.length();
+			int ix = value.indexOf(oValue);
+			while (ix >= 0) {
+				value.replace(ix, ix + l, nValue);
+				ix = value.indexOf(oValue);
+				if (!all) {
+					break;
+				}
+			}
+		}
+	}
+
+	public static int stringToInt(String value) {
+		int v = 0;
+		try {
+			v = Integer.valueOf(value);
+		} catch (Exception e) {
+		}
+		return v;
+	}
+
+	public static String byteArrayToString(byte[] value) {
+		StringBuilder v = new StringBuilder();
+		if (value != null && value.length > 0) {
+			for (byte b : value) {
+				v.append(Character.valueOf((char) b));
+			}
+		}
+		return v.toString();
+	}
+
+	public static String encodeBase64(byte[] buf) {
+		int size = buf.length;
+		char[] ar = new char[((size + 2) / 3) * 4];
+		int a = 0;
+		int i = 0;
+		while (i < size) {
+			byte b0 = buf[i++];
+			byte b1 = (i < size) ? buf[i++] : 0;
+			byte b2 = (i < size) ? buf[i++] : 0;
+
+			int mask = 0x3F;
+			ar[a++] = ALPHABET[(b0 >> 2) & mask];
+			ar[a++] = ALPHABET[((b0 << 4) | ((b1 & 0xFF) >> 4)) & mask];
+			ar[a++] = ALPHABET[((b1 << 2) | ((b2 & 0xFF) >> 6)) & mask];
+			ar[a++] = ALPHABET[b2 & mask];
+		}
+		switch (size % 3) {
+		case 1:
+			ar[--a] = '=';
+		case 2:
+			ar[--a] = '=';
+		}
+		return new String(ar);
+	}
+
+	/**
+	 * Translates the specified Base64 string into a byte array.
+	 * 
+	 * @param s
+	 *            the Base64 string (not null)
+	 * @return the byte array (not null)
+	 */
+	public static byte[] decodeBase64(String s) {
+		int delta = s.endsWith("==") ? 2 : s.endsWith("=") ? 1 : 0;
+		byte[] buffer = new byte[s.length() * 3 / 4 - delta];
+		int mask = 0xFF;
+		int index = 0;
+		for (int i = 0; i < s.length(); i += 4) {
+			int c0 = toInt[s.charAt(i)];
+			int c1 = toInt[s.charAt(i + 1)];
+			buffer[index++] = (byte) (((c0 << 2) | (c1 >> 4)) & mask);
+			if (index >= buffer.length) {
+				return buffer;
+			}
+			int c2 = toInt[s.charAt(i + 2)];
+			buffer[index++] = (byte) (((c1 << 4) | (c2 >> 2)) & mask);
+			if (index >= buffer.length) {
+				return buffer;
+			}
+			int c3 = toInt[s.charAt(i + 3)];
+			buffer[index++] = (byte) (((c2 << 6) | c3) & mask);
+		}
+		return buffer;
+	}
+
+	public static File createTmpDir(String applicationID, String name) {
+		if (mPathDir == null) {
+			initPath(applicationID);
+		}
+		File tmpDir = null;
+		if (mPathDir == null || mPathDir.exists() == false) {
+			mPathDir = Environment.getExternalStorageDirectory();
+		}
+		if (externalStorageWritable(applicationID)) {
+			tmpDir = new File(mPathDir, name);
+			/**
+			 * This is not needed
+			 */
+			// deleteDir(tmpDir.getAbsolutePath());
+			tmpDir.mkdirs();
+		}
+		return tmpDir;
+	}
+
+	public static String validString(String value) {
+		String v = "";
+		if (!isNullOrEmpty(value)) {
+			v = value;
+		}
+		return v;
+	}
+
+	public static boolean externalStorageWritable(String applicationID) {
+		checkExternalStorage(applicationID);
+		return mExternalStorageWriteable;
+	}
+
+	public static boolean externalStorageAvailable(String applicationID) {
+		checkExternalStorage(applicationID);
+		return mExternalStorageAvailable;
+	}
+
+	private static void checkExternalStorage(String applicationID) {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			// We can read and write the media
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			// We can only read the media
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		} else {
+			// Something else is wrong. It may be one of many other states, but
+			// all we need
+			// to know is we can neither read nor write
+			mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
+		if (mExternalStorageWriteable && mPathDir == null) {
+			initPath(applicationID);
+			if (mPathDir == null) {
+				mExternalStorageWriteable = false;
+			}
+		}
+	}
+	
+		private static void initPath(String applicationID) {
+		File initPath = Environment.getExternalStorageDirectory();
+		mPathDir = new File(initPath, applicationID);
+		mPathDir.mkdirs();
+	}
+
+	public static void deleteDir(String baseDir) {
+		deleteDir(new File(baseDir));
+	}
+
+	public static void deleteDir(File baseDir) {
+		if (baseDir != null && baseDir.exists()) {
+			boolean deleted = false;
+			if (baseDir.isDirectory()) {
+				File[] ff = baseDir.listFiles();
+				for (File f : ff) {
+					deleteDir(f);
+				}
+				deleted = baseDir.delete();
+			} else {
+				deleted = baseDir.delete();
+			}
+			if (deleted == false) {
+				logger.log(Level.WARNING, "Unable to delete directory:\n "
+						+ baseDir);
+			}
+
+		}
+
+	}
+
+	public static String getCurrentDirectory(String applicationID) {
+		String currDir = null;
+		if (externalStorageWritable(applicationID)) {
+			File initPath = Environment.getExternalStorageDirectory();
+			mPathDir = new File(initPath, applicationID);
+			mPathDir.mkdirs();
+			currDir = mPathDir.getAbsolutePath();
+		}
+		return currDir;
+	}
+
+	public static String getPicName() {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String n = "XIMG_" + timeStamp + ".jpg";
+		return n;
+	}
+
+	public static CharSequence doubleToString(double value) {
+		return String.valueOf(value);
+	}
+
+	public static Date longToDate(long val) {
+		Date d = null;
+		try {
+			d = new Date(val);
+		} catch (Exception e) {
+			d = new Date();
+			logger.log(Level.WARNING, "Unable to parse long to Date:\n " + e);
+		}
+		return d;
+	}
+
+	/**
+	 * Get the size in bytes of a bitmap.
+	 * 
+	 * @param bitmap
+	 * @return size in bytes
+	 */
+	public static int getBitmapSize(Bitmap bitmap) {
+		int s = 0;
+		/*
+		 * if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+		 * return bitmap.getByteCount(); }
+		 */
+		// Pre HC-MR1
+		if (bitmap != null) {
+			s = bitmap.getRowBytes() * bitmap.getHeight();
+		}
+		return s;
+	}
+
+	public static String trim(String s) {
+		String v = null;
+		if (s != null) {
+			v = s.trim();
+		}
+		return v;
+	}
+
+	public static String booleanSiNoToString(Boolean value) {
+		String v = "No";
+		if (value) {
+			v = "Si";
+		}
+		return v;
+	}
+
+	private static String priceWithDecimal(Double price) {
+		return decimalCurrencyFormat.format(price);
+	}
+
+	private static String priceWithoutDecimal(Double price) {
+		return currencyFormat.format(price);
+	}
+
+	public static String priceToString(Double price) {
+		String toShow = priceWithoutDecimal(price);
+		if (toShow.indexOf(".") > 0) {
+			return priceWithDecimal(price);
+		} else {
+			return priceWithoutDecimal(price);
+		}
+	}
+}

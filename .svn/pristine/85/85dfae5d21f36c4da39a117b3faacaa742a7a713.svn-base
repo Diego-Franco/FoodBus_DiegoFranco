@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhotoShutter" >
+
+    <FrameLayout
+        android:id="@+id/c_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <RelativeLayout
+        android:id="@+id/leftControls"
+        android:layout_width="50dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@color/blackAlpha" >
+
+        <ImageButton
+            android:id="@+id/btnFlash"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@android:string/untitled"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_flash_style" />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_alignTop="@id/btnFlash"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@android:string/untitled"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_back_style" />
+
+        <ImageButton
+            android:id="@+id/btnGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dip"
+            android:background="@android:color/transparent"
+            android:contentDescription="@android:string/untitled"
+            android:src="@drawable/ic_picture" />
+
+        <TextView
+            android:id="@+id/txtPicCount"
+            android:layout_width="25dip"
+            android:layout_height="25dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dip"
+            android:layout_marginLeft="20dip"
+            android:background="@drawable/ic_count"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" >
+
+        <ImageButton
+            android:id="@+id/btnSnapshot"
+            android:layout_width="80dip"
+            android:layout_height="100dip"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@android:string/untitled"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_camera_style" />
+    </RelativeLayout>
+
+</RelativeLayout>

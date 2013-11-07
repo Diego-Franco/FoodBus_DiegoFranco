@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#000000</color>
+    <color name="blackAlpha">#CC000000</color>
+    <color name="greenStart">#ABEB00</color>
+    <color name="greenMid">#8ABD00</color>
+    <color name="greenEnd">#6F9900</color>
+    <color name="pinkStart">#F1169F</color>
+    <color name="pinkEnd">#F228A7</color>
+    <color name="pinkMid">#D20D88</color>
+    <color name="grayScale">#565656</color>
+    <color name="white">#ffff</color>
+    <color name="whiteAlpha">#CCffffff</color>
+    <color name="greenMint">#8ABD00</color>
+    <color name="greenLemon">#ABEB00</color>
+    <color name="orange">#FF8A00</color>
+    <color name="vokterBlueLight">#1E6289</color>
+    <color name="vokterBlueMedium">#05537C</color>
+    <color name="vokterBlueStrong">#003A63</color>
+    <color name="axaBlueLight">#7497C2</color>
+    <color name="axaBlueStrong">#00549B</color>
+    <color name="axaAlphaBlueStrong">#3300549B</color>
+    <color name="axaAlphaDialgoBlueStrong">#CC00549B</color>
+    <color name="axaBlueBackground">#ECF3FA</color>
+    <color name="axaSBlueBackground">#003565</color>
+    <color name="axaBlackBackground">#262B32</color>
+    <color name="axaAlphaBlackBackground">#FC262B32</color>
+    <color name="axaGrayBackground">#6A7890</color>
+    <color name="axaGrayLigthBackground">#C7CED9</color>
+    <color name="axaBlueCorner">#D4DBE0</color>
+    <color name="axaBlueLogo">#00529C</color>
+    <color name="axaAlphaBlueLogo">#CC00529C</color>
+    <color name="axaBlueSelector">#0086FF</color>
+    <color name="axaRedSelector">#CC0000</color>
+    <color name="axa_btn_disabled">#EAEAEA</color>
+    <color name="axa_btn_pressed">#7088AF</color>
+    <color name="axa_btn_focused">#BFC8D6</color>
+    <color name="axaIcReady">#99CC00</color>
+    <color name="axaIcStandby">#7088AF</color>
+    <color name="axaIcWarning">#FFBB33</color>
+    <color name="axaIcWrong">#FF4444</color>
+
+</resources>
